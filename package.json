@@ -1,6 +1,6 @@
 {
 	"name": "screenshot-pool",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"description": "A rock solid screenshot service using pooled electron workers",
 	"main": "index.js",
 	"scripts": {
