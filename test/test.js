@@ -29,7 +29,7 @@ describe('Screenshot Pool', function () {
 	});
 
 	it('should create a new worker, capture and wait for it\'s termination', function (done) {
-		this.timeout(32000);
+		this.timeout(35000);
 		const htmlData = fs.readFileSync('test/fixtures/a.html', 'utf-8');
 
 		sp
@@ -37,7 +37,7 @@ describe('Screenshot Pool', function () {
 				url: 'data:text/html;charset=utf-8,' + htmlData,
 				width: 200,
 				height: 80,
-				timeout: 32000
+				timeout: 35000
 			})
 			.then(() => {
 				setTimeout(done, 31000);
