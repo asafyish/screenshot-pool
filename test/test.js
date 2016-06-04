@@ -1,6 +1,6 @@
 'use strict';
 
-/* global describe, before, it */
+/* global describe, it */
 /* eslint no-unused-expressions: 0, no-sync: 0 */
 
 const fs = require('fs');
@@ -20,6 +20,29 @@ describe('Screenshot Pool', function () {
 		max: MAX_POOL_SIZE,
 		defaultTimeout: 15000,
 		log: true
+	});
+
+	it('should create a pool using the default parameters', function (done) {
+		const newSp = new ScreenshotPool();
+		expect(newSp.capture).to.be.instanceof(Function);
+		done();
+	});
+
+	it('should create a new worker, capture and wait for it\'s termination', function (done) {
+		this.timeout(32000);
+		const htmlData = fs.readFileSync('test/fixtures/a.html', 'utf-8');
+
+		sp
+			.capture({
+				url: 'data:text/html;charset=utf-8,' + htmlData,
+				width: 200,
+				height: 80,
+				timeout: 32000
+			})
+			.then(() => {
+				setTimeout(done, 31000);
+			})
+			.catch(done);
 	});
 
 	it('should fail on comparing width', function (done) {
@@ -130,5 +153,47 @@ describe('Screenshot Pool', function () {
 				});
 			})
 			.catch(done);
+	});
+
+	it('should fail on bad url', function (done) {
+		sp
+			.capture({
+				url: 'bad-url',
+				width: 100,
+				height: 300
+			})
+			.catch(err => {
+				expect(err.message).to.equal('-300 ERR_INVALID_URL');
+				done();
+			});
+	});
+
+	it('should fail on non existent url', function (done) {
+		sp
+			.capture({
+				url: 'http://www.i-dont-exist-and-never-will-be.com',
+				width: 100,
+				height: 300
+			})
+			.catch(err => {
+				expect(err.message).to.equal('-105 ERR_NAME_NOT_RESOLVED');
+				done();
+			});
+	});
+
+	it('should timeout on a very short time', function (done) {
+		const htmlData = fs.readFileSync('test/fixtures/b.html', 'utf-8');
+
+		sp
+			.capture({
+				url: 'data:text/html;charset=utf-8,' + htmlData,
+				width: 100,
+				height: 300,
+				timeout: 1
+			})
+			.catch(err => {
+				expect(err.message).to.equal('Timeout reached');
+				done();
+			});
 	});
 });
