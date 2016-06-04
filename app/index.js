@@ -83,6 +83,7 @@ process.on('message', message => {
 
 			// Listen once for page finished loading all resources
 			win.webContents.once('did-finish-load', () => {
+				win.webContents.removeAllListeners();
 
 				// Force electron to render our page,
 				// without it the image will be empty on OSX
@@ -103,6 +104,11 @@ process.on('message', message => {
 						process.send({type: 'captured', image: image.toPng()});
 					});
 				});
+			});
+
+			win.webContents.once('did-fail-load', (event, code, description) => {
+				win.webContents.removeAllListeners();
+				process.send({type: 'error', code: code, description: description});
 			});
 
 			// Load the url. can also be data url
