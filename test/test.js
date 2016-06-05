@@ -22,6 +22,13 @@ describe('Screenshot Pool', function () {
 		log: true
 	});
 
+	it('should have the options configured correctly', function () {
+		expect(sp.options.min).to.equal(0);
+		expect(sp.options.max).to.equal(MAX_POOL_SIZE);
+		expect(sp.options.defaultTimeout).to.equal(15000);
+		expect(sp.options.log).to.equal(true);
+	});
+
 	it('should create a pool using the default parameters', function (done) {
 		const newSp = new ScreenshotPool();
 		expect(newSp.capture).to.be.instanceof(Function);
@@ -43,6 +50,38 @@ describe('Screenshot Pool', function () {
 				setTimeout(done, 31000);
 			})
 			.catch(done);
+	});
+
+	it.skip('should mark the worker as bad, and recreate it', function (done) {
+		this.timeout(35000);
+		const htmlData = fs.readFileSync('test/fixtures/a.html', 'utf-8');
+
+		const newSp = new ScreenshotPool({
+			max: 1,
+			maxTimeouts: 0,
+			log: true
+		});
+		expect(newSp.capture).to.be.instanceof(Function);
+
+		newSp
+			.capture({
+				url: 'data:text/html;charset=utf-8,' + htmlData,
+				width: 200,
+				height: 80,
+				timeout: 1
+			})
+			.catch(err => {
+				expect(err.message).to.equal('Timeout reached');
+
+				newSp
+					.capture({
+						url: 'data:text/html;charset=utf-8,' + htmlData,
+						width: 200,
+						height: 80,
+						timeout: 5000
+					})
+					.then(() => done);
+			});
 	});
 
 	it('should fail on comparing width', function (done) {
