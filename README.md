@@ -1,14 +1,14 @@
 # screenshot-pool
 
 
-A high performance, rock solid and lightweight screenshot tool using a pool of electrons.   
+A high performance, rock solid and lightweight screenshot tool using a [pool](https://github.com/coopernurse/node-pool) of [electrons](https://github.com/electron/electron).   
 [![Dependencies](https://david-dm.org/raszi/node-tmp.svg)](https://david-dm.org/raszi/node-tmp)
 [![Build Status](https://travis-ci.org/asafyish/screenshot-pool.svg?branch=master)](https://travis-ci.org/asafyish/screenshot-pool)
 
 
 ## About
 
-Taking screenshots using [electron](https://github.com/electron/electron)
+Taking screenshots using electron
 is not reliable enough. electron can crash or stop responding all together, especially if running 
 under [xvfb](https://en.wikipedia.org/wiki/Xvfb).
 
