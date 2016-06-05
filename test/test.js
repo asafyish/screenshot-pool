@@ -70,6 +70,7 @@ describe('Screenshot Pool', function () {
 				height: 80,
 				timeout: 1
 			})
+			.then(() => done(new Error('Screenshot captured. This should not happen')))
 			.catch(err => {
 				expect(err.message).to.equal('Timeout reached');
 
@@ -202,6 +203,7 @@ describe('Screenshot Pool', function () {
 				width: 100,
 				height: 300
 			})
+			.then(() => done(new Error('Screenshot captured. This should not happen')))
 			.catch(err => {
 				expect(err.message).to.equal('-300 ERR_INVALID_URL');
 				done();
@@ -215,6 +217,7 @@ describe('Screenshot Pool', function () {
 				width: 100,
 				height: 300
 			})
+			.then(() => done(new Error('Screenshot captured. This should not happen')))
 			.catch(err => {
 				expect(err.message).to.equal('-105 ERR_NAME_NOT_RESOLVED');
 				done();
@@ -231,6 +234,7 @@ describe('Screenshot Pool', function () {
 				height: 300,
 				timeout: 1
 			})
+			.then(() => done(new Error('Screenshot captured. This should not happen')))
 			.catch(err => {
 				expect(err.message).to.equal('Timeout reached');
 				done();
