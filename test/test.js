@@ -27,6 +27,7 @@ describe('Screenshot Pool', function () {
 		expect(sp.options.max).to.equal(MAX_POOL_SIZE);
 		expect(sp.options.defaultTimeout).to.equal(15000);
 		expect(sp.options.log).to.equal(true);
+		expect(sp.options.maxTimeouts).to.equal(3);
 	});
 
 	it('should create a pool using the default parameters', function (done) {
@@ -52,7 +53,7 @@ describe('Screenshot Pool', function () {
 			.catch(done);
 	});
 
-	it.skip('should mark the worker as bad, and recreate it', function (done) {
+	it('should mark the worker as bad, and recreate it', function (done) {
 		this.timeout(35000);
 		const htmlData = fs.readFileSync('test/fixtures/a.html', 'utf-8');
 
@@ -61,7 +62,6 @@ describe('Screenshot Pool', function () {
 			maxTimeouts: 0,
 			log: true
 		});
-		expect(newSp.capture).to.be.instanceof(Function);
 
 		newSp
 			.capture({
@@ -80,7 +80,8 @@ describe('Screenshot Pool', function () {
 						height: 80,
 						timeout: 5000
 					})
-					.then(() => done);
+					.then(() => done())
+					.catch(done);
 			});
 	});
 
