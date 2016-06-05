@@ -36,56 +36,6 @@ describe('Screenshot Pool', function () {
 		done();
 	});
 
-	it('should create a new worker, capture and wait for it\'s termination', function (done) {
-		this.timeout(35000);
-		const htmlData = fs.readFileSync('test/fixtures/a.html', 'utf-8');
-
-		sp
-			.capture({
-				url: 'data:text/html;charset=utf-8,' + htmlData,
-				width: 200,
-				height: 80,
-				timeout: 35000
-			})
-			.then(() => {
-				setTimeout(done, 31000);
-			})
-			.catch(done);
-	});
-
-	it('should mark the worker as bad, and recreate it', function (done) {
-		this.timeout(35000);
-		const htmlData = fs.readFileSync('test/fixtures/a.html', 'utf-8');
-
-		const newSp = new ScreenshotPool({
-			max: 1,
-			maxTimeouts: 0,
-			log: true
-		});
-
-		newSp
-			.capture({
-				url: 'data:text/html;charset=utf-8,' + htmlData,
-				width: 200,
-				height: 80,
-				timeout: 1
-			})
-			.then(() => done(new Error('Screenshot captured. This should not happen')))
-			.catch(err => {
-				expect(err.message).to.equal('Timeout reached');
-
-				newSp
-					.capture({
-						url: 'data:text/html;charset=utf-8,' + htmlData,
-						width: 200,
-						height: 80,
-						timeout: 5000
-					})
-					.then(() => done())
-					.catch(done);
-			});
-	});
-
 	it('should fail on comparing width', function (done) {
 		const htmlData = fs.readFileSync('test/fixtures/a.html', 'utf-8');
 		const imageData = fs.readFileSync('test/fixtures/a.png');
@@ -238,6 +188,56 @@ describe('Screenshot Pool', function () {
 			.catch(err => {
 				expect(err.message).to.equal('Timeout reached');
 				done();
+			});
+	});
+
+	it('should create a new worker, capture and wait for it\'s termination', function (done) {
+		this.timeout(35000);
+		const htmlData = fs.readFileSync('test/fixtures/a.html', 'utf-8');
+
+		sp
+			.capture({
+				url: 'data:text/html;charset=utf-8,' + htmlData,
+				width: 200,
+				height: 80,
+				timeout: 35000
+			})
+			.then(() => {
+				setTimeout(done, 31000);
+			})
+			.catch(done);
+	});
+
+	it('should mark the worker as bad, and recreate it', function (done) {
+		this.timeout(35000);
+		const htmlData = fs.readFileSync('test/fixtures/a.html', 'utf-8');
+
+		const newSp = new ScreenshotPool({
+			max: 1,
+			maxTimeouts: 0,
+			log: true
+		});
+
+		newSp
+			.capture({
+				url: 'data:text/html;charset=utf-8,' + htmlData,
+				width: 200,
+				height: 80,
+				timeout: 1
+			})
+			.then(() => done(new Error('Screenshot captured. This should not happen')))
+			.catch(err => {
+				expect(err.message).to.equal('Timeout reached');
+
+				newSp
+					.capture({
+						url: 'data:text/html;charset=utf-8,' + htmlData,
+						width: 200,
+						height: 80,
+						timeout: 5000
+					})
+					.then(() => done())
+					.catch(done);
 			});
 	});
 });
