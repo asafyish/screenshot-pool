@@ -36,6 +36,17 @@ describe('Screenshot Pool', function () {
 		done();
 	});
 
+	it('should do a basic rendering', function(done) {
+		sp
+			.capture({
+				url: 'data:text/html;charset=utf-8,<html><head></head><body></body></html>',
+				width: 202,
+				height: 80
+			})
+			.then(() => done())
+			.catch(done);
+	});
+
 	it('should fail on comparing width', function (done) {
 		const htmlData = fs.readFileSync('test/fixtures/a.html', 'utf-8');
 		const imageData = fs.readFileSync('test/fixtures/a.png');
