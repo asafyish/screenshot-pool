@@ -9,7 +9,7 @@ const chai = require('chai');
 const ScreenshotPool = require('../');
 const expect = chai.expect;
 
-const MAX_POOL_SIZE = require('os').cpus().length * 2;
+const MAX_POOL_SIZE = Math.min(require('os').cpus().length * 2, 16);
 
 describe('Screenshot Pool', function () {
 
@@ -113,7 +113,7 @@ describe('Screenshot Pool', function () {
 
 					// If more then 1% mismatch
 					if (misMatchPercentage > 1) {
-						return done(new Error('Image data not identical to fixture by ' + misMatchPercentage));
+						return done(new Error('Image data not identical to fixture by ' + misMatchPercentage + '%'));
 					}
 
 					if (!data.isSameDimensions) {
@@ -144,7 +144,7 @@ describe('Screenshot Pool', function () {
 
 					// If more then 1% mismatch
 					if (misMatchPercentage > 1) {
-						return done(new Error('Image data not identical to fixture by ' + misMatchPercentage));
+						return done(new Error('Image data not identical to fixture by ' + misMatchPercentage + '%'));
 					}
 
 					if (!data.isSameDimensions) {
