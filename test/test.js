@@ -113,7 +113,7 @@ describe('Screenshot Pool', function () {
 
 					// If more then 1% mismatch
 					if (misMatchPercentage > 1) {
-						return done(new Error('Image data not identical to fixture'));
+						return done(new Error('Image data not identical to fixture by ' + misMatchPercentage));
 					}
 
 					if (!data.isSameDimensions) {
@@ -144,7 +144,7 @@ describe('Screenshot Pool', function () {
 
 					// If more then 1% mismatch
 					if (misMatchPercentage > 1) {
-						return done(new Error('Image data not identical to fixture'));
+						return done(new Error('Image data not identical to fixture by ' + misMatchPercentage));
 					}
 
 					if (!data.isSameDimensions) {
