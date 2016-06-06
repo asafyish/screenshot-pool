@@ -9,11 +9,12 @@ const chai = require('chai');
 const ScreenshotPool = require('../');
 const expect = chai.expect;
 
-const MAX_POOL_SIZE = Math.min(require('os').cpus().length * 2, 16);
+const MAX_POOL_SIZE = require('os').cpus().length * 2;
 
 describe('Screenshot Pool', function () {
 
 	this.timeout(16000);
+	console.log('Max pool size is ' + MAX_POOL_SIZE);
 
 	const sp = new ScreenshotPool({
 		min: 0,
@@ -202,7 +203,7 @@ describe('Screenshot Pool', function () {
 			});
 	});
 
-	it('should do twice of pool size rendering', function(done) {
+	it('should render images, twice the size of the pool', function(done) {
 		const SIZE = MAX_POOL_SIZE * 2;
 		this.timeout(SIZE * 2 * 20000);
 
