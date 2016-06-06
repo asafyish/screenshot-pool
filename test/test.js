@@ -9,7 +9,7 @@ const chai = require('chai');
 const ScreenshotPool = require('../');
 const expect = chai.expect;
 
-const MAX_POOL_SIZE = require('os').cpus().length * 2;
+const MAX_POOL_SIZE = (process.env.CPU_CORES || require('os').cpus().length) * 2;
 
 describe('Screenshot Pool', function () {
 
