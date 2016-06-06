@@ -204,7 +204,7 @@ describe('Screenshot Pool', function () {
 
 	it('should do twice of pool size rendering', function(done) {
 		const SIZE = MAX_POOL_SIZE * 2;
-		this.timeout(SIZE * 14000);
+		this.timeout(SIZE * 2 * 20000);
 
 		const images = [];
 		for (let i = 0; i < SIZE; i++) {
@@ -212,7 +212,8 @@ describe('Screenshot Pool', function () {
 				.capture({
 					url: 'data:text/html;charset=utf-8,<html><head></head><body><h1>Hello World</h1></body></html>',
 					width: 202,
-					height: 80
+					height: 80,
+					timeout: 19000
 				}));
 		}
 
