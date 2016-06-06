@@ -204,7 +204,7 @@ describe('Screenshot Pool', function () {
 
 	it('should do twice of pool size rendering', function(done) {
 		const SIZE = MAX_POOL_SIZE * 2;
-		this.timeout(SIZE * 3000);
+		this.timeout(SIZE * 10000);
 
 		const images = [];
 		for (let i = 0; i < SIZE; i++) {
