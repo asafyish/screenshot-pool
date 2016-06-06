@@ -27,7 +27,7 @@ describe('Screenshot Pool', function () {
 		expect(sp.options.max).to.equal(MAX_POOL_SIZE);
 		expect(sp.options.defaultTimeout).to.equal(15000);
 		expect(sp.options.log).to.equal(true);
-		expect(sp.options.maxTimeouts).to.equal(3);
+		expect(sp.options.maxErrors).to.equal(3);
 	});
 
 	it('should create a pool using the default parameters', function (done) {
@@ -202,8 +202,32 @@ describe('Screenshot Pool', function () {
 			});
 	});
 
+	it('should do twice of pool size rendering', function(done) {
+		const SIZE = MAX_POOL_SIZE * 2;
+		this.timeout(SIZE * 3000);
+
+		const images = [];
+		for (let i = 0; i < SIZE; i++) {
+			images.push(sp
+				.capture({
+					url: 'data:text/html;charset=utf-8,<html><head></head><body><h1>Hello World</h1></body></html>',
+					width: 202,
+					height: 80
+				}));
+		}
+
+		Promise.all(images)
+			.then(results => {
+				expect(results).to.be.instanceof(Array);
+				expect(results.length).to.equal(SIZE);
+
+				done();
+			})
+			.catch(done);
+	});
+
 	it('should create a new worker, capture and wait for it\'s termination', function (done) {
-		this.timeout(35000);
+		this.timeout(40000);
 		const htmlData = fs.readFileSync('test/fixtures/a.html', 'utf-8');
 
 		sp
@@ -211,7 +235,7 @@ describe('Screenshot Pool', function () {
 				url: 'data:text/html;charset=utf-8,' + htmlData,
 				width: 200,
 				height: 80,
-				timeout: 35000
+				timeout: 40000
 			})
 			.then(() => {
 				setTimeout(done, 31000);
@@ -225,7 +249,7 @@ describe('Screenshot Pool', function () {
 
 		const newSp = new ScreenshotPool({
 			max: 1,
-			maxTimeouts: 0,
+			maxErrors: 0,
 			log: true
 		});
 

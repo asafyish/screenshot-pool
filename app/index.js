@@ -3,8 +3,11 @@
 // This code runs by electron
 
 const electron = require('electron');
-const {app} = electron;
-const {BrowserWindow} = electron;
+const net = require('net');
+const {app, BrowserWindow} = electron;
+
+const StreamEmitter = require('../shared');
+const stream = new StreamEmitter(new net.Socket({fd: 3}));
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -40,6 +43,7 @@ function createWindow() {
 	// when you should delete the corresponding element.
 	win.once('closed', () => {
 		win = null;
+		app.exit(-4);
 	});
 
 	// If the window becomes unresponsive or crashes, kill the process
@@ -47,7 +51,7 @@ function createWindow() {
 	win.webContents.once('crashed', () => app.exit(-1));
 
 	// Notify the parent we are ready to take screenshots
-	process.send({type: 'ready'});
+	stream.emit('ready');
 }
 
 // This method will be called when Electron has finished
@@ -72,49 +76,44 @@ app.on('activate', () => {
 	}
 });
 
-process.once('disconnect', () => app.exit(-3));
+// Once the stream is closed, terminate this process
+stream.once('close', () => app.exit(-3));
 
-process.on('message', message => {
+stream.on('capture', options => {
 
-	switch (message.type) {
-		case 'screenshot': {
-			const width = parseInt(message.options.width / scaleFactor, 10);
-			const height = parseInt(message.options.height / scaleFactor, 10);
+	const width = parseInt(options.width / scaleFactor, 10);
+	const height = parseInt(options.height / scaleFactor, 10);
 
-			// Listen once for page finished loading all resources
-			win.webContents.once('did-finish-load', () => {
-				win.webContents.removeAllListeners();
+	// Listen once for page finished loading all resources
+	win.webContents.once('did-stop-loading', () => {
+		win.webContents.removeAllListeners();
 
-				// Force electron to render our page,
-				// without it the image will be empty on OSX
-				win.webContents.beginFrameSubscription(function () {
+		// Force electron to render our page,
+		// without it the image will be empty on OSX
+		win.webContents.beginFrameSubscription(function () {
 
-					// No more rendering is required
-					win.webContents.endFrameSubscription();
+			// No more rendering is required
+			win.webContents.endFrameSubscription();
 
-					// Preform the capture
-					win.capturePage({
-						x: 0,
-						y: 0,
-						width: width,
-						height: height
-					}, image => {
+			// Preform the capture
+			win.capturePage({
+				x: 0,
+				y: 0,
+				width: width,
+				height: height
+			}, image => {
 
-						// Send back the image data as png, without touching the disk
-						process.send({type: 'captured', image: image.toPng()});
-					});
-				});
+				// Send back the image data as png, without touching the disk
+				stream.emit('captured', image.toPng());
 			});
+		});
+	});
 
-			win.webContents.once('did-fail-load', (event, code, description) => {
-				win.webContents.removeAllListeners();
-				process.send({type: 'error', code: code, description: description});
-			});
+	win.webContents.once('did-fail-load', (event, code, description) => {
+		win.webContents.removeAllListeners();
+		stream.emit('error', {code: code, description: description});
+	});
 
-			// Load the url. can also be data url
-			win.webContents.loadURL(message.options.url);
-
-			break;
-		}
-	}
+	// Load the url. can also be data url
+	win.webContents.loadURL(options.url);
 });
