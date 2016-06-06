@@ -37,7 +37,7 @@ conse sp = new ScreenshotPool({
   min: 0, // Minimum number of workers in pool. 0 is recommended
   max: MAX_POOL_SIZE, // Maximum number of workers in pool. cpu count * 2 is recommended
   defaultTimeout: 1000, // How long to wait before rejecting the operation
-  maxTimeouts: 3, // How many successive timeouts before marking the worker as bad
+  maxErrors: 3, // How many consecutive errors before marking the worker as bad
   log: false // Should the pool print logs
 });
 		
