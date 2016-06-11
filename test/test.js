@@ -1,7 +1,7 @@
 'use strict';
 
 /* global describe, it */
-/* eslint no-unused-expressions: 0, no-sync: 0 */
+/* eslint no-unused-expressions: 0, no-sync: 0, no-console: 0 */
 
 const fs = require('fs');
 const resemble = require('node-resemble-js');
