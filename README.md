@@ -2,14 +2,14 @@
 
 
 A high performance, rock solid and lightweight screenshot tool using a [pool](https://github.com/coopernurse/node-pool) of [electrons](https://github.com/electron/electron).   
-[![Dependencies](https://david-dm.org/raszi/node-tmp.svg)](https://david-dm.org/raszi/node-tmp)
+[![Dependencies](https://david-dm.org/asafyish/screenshot-pool.svg)](https://david-dm.org/asafyish/screenshot-pool)
 [![Build Status](https://travis-ci.org/asafyish/screenshot-pool.svg?branch=master)](https://travis-ci.org/asafyish/screenshot-pool)
 
 
 ## About
 
 Taking screenshots using electron
-is not reliable enough. electron can crash or stop responding all together, especially if running 
+is not reliable enough. electron can crash or stop responding all together, especially if running
 under [xvfb](https://en.wikipedia.org/wiki/Xvfb).
 
 Taking a single screenshot each time is not efficient (not utilizing multi-core).   
@@ -27,20 +27,20 @@ npm install screenshot-pool
 
 ## Taking screenshots
 
-Create a single ScreenshotPool object, use it to capture images. 
+Create a single ScreenshotPool object, use it to capture images.
 
 ```javascript
 const MAX_POOL_SIZE = require('os').cpus().length * 2;
 
 const ScreenshotPool = require('screenshot-pool');
-conse sp = new ScreenshotPool({
+const sp = new ScreenshotPool({
   min: 0, // Minimum number of workers in pool. 0 is recommended
   max: MAX_POOL_SIZE, // Maximum number of workers in pool. cpu count * 2 is recommended
   defaultTimeout: 1000, // How long to wait before rejecting the operation
   maxErrors: 3, // How many consecutive errors before marking the worker as bad
   log: false // Should the pool print logs
 });
-		
+
 sp
   .capture({
     url: 'data:text/html;charset=utf-8,' + htmlData, // Can also be a url
