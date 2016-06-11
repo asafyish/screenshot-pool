@@ -1,6 +1,6 @@
 {
 	"name": "screenshot-pool",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "A rock solid screenshot service using pooled electron workers",
 	"main": "index.js",
 	"scripts": {
@@ -29,12 +29,12 @@
 	],
 	"dependencies": {
 		"generic-pool": "2.4.2",
-		"electron-prebuilt": "1.2.1",
+		"electron-prebuilt": "1.2.2",
 		"cross-spawn": "4.0.0",
 		"length-prefixed-stream": "1.5.0"
 	},
 	"devDependencies": {
-		"eslint": "2.11.1",
+		"eslint": "2.12.0",
 		"mocha": "2.5.3",
 		"istanbul": "0.4.3",
 		"chai": "3.5.0",
