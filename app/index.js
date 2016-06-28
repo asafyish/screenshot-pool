@@ -114,6 +114,12 @@ stream.on('capture', options => {
 		stream.emit('error', {code: code, description: description});
 	});
 
+	win.webContents.on('did-get-response-details', (event, status, newURL, originalURL, httpResponseCode) => {
+		if (httpResponseCode !== 200) {
+			stream.emit('resource-not-found', {code: httpResponseCode, url: originalURL});
+		}
+	});
+
 	// Load the url. can also be data url
 	win.webContents.loadURL(options.url);
 });

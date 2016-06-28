@@ -186,6 +186,20 @@ describe('Screenshot Pool', function () {
 			});
 	});
 
+	it('should fail rendering an image with a resource returning 404', function (done) {
+		sp
+			.capture({
+				url: 'data:text/html;charset=utf-8,<html><head></head><body><img src="https://www.google.co.il/images/branding/googlelogo/2x/googlelogo_color_272x92dp.pn" width="10" height="10"></body></html>',
+				width: 100,
+				height: 300
+			})
+			.then(() => done(new Error('Screenshot captured. This should not happen')))
+			.catch(err => {
+				expect(err.message).to.equal('404 https://www.google.co.il/images/branding/googlelogo/2x/googlelogo_color_272x92dp.pn');
+				done();
+			});
+	});
+
 	it('should timeout on a very short time', function (done) {
 		const htmlData = fs.readFileSync('test/fixtures/b.html', 'utf-8');
 
@@ -202,7 +216,7 @@ describe('Screenshot Pool', function () {
 				done();
 			});
 	});
-
+	
 	it('should render images, twice the size of the pool', function(done) {
 		const SIZE = MAX_POOL_SIZE * 2;
 		this.timeout(SIZE * 3 * 20000);
