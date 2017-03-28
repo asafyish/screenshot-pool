@@ -47,13 +47,9 @@ function createWindow() {
 	});
 
 	// If the window becomes unresponsive or crashes, kill the process
-	win.once('unresponsive',
-		() => app.exit(-2)
-	);
+	win.once('unresponsive', () => app.exit(-2));
 
-	win.webContents.once('crashed',
-		() => app.exit(-1)
-	);
+	win.webContents.once('crashed', () => app.exit(-1));
 
 	// Notify the parent we are ready to take screenshots
 	stream.emit('ready');
@@ -112,7 +108,7 @@ stream.on('capture', options => {
 					clearTimeout(snapshotTimeout);
 					stream.emit('captured', image.toPng());
 				});
-			},options.delaySnapshotTimeout);
+			}, options.delaySnapshotTimeout);
 		});
 	});
 
